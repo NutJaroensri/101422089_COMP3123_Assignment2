@@ -2,8 +2,8 @@ const express = require('express')
 const userRoutes = require('./routes/userRoutes')
 const employeeRoutes = require('./routes/employeeRoutes')
 const mongoose = require('mongoose')
-//const DB_CONNECTION_STRING = "mongodb+srv://enyouthree:0807989870Db@cluster0.f2ocl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-const DB_CONNECTION_STRING = "mongodb://mongodb:27017/mydatabase";
+const DB_CONNECTION_STRING = "mongodb+srv://enyouthree:0807989870Db@cluster0.f2ocl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+//const DB_CONNECTION_STRING = "mongodb://mongodb:27017/mydatabase";
 
 // connect to MongoDB
 mongoose.connect(DB_CONNECTION_STRING, {
