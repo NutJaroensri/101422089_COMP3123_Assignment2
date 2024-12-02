@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SearchEmployee = () => {
   const [searchBy, setSearchBy] = useState(''); // Track which criterion the user selects
@@ -34,64 +34,129 @@ const SearchEmployee = () => {
   };
 
   return (
-    <div>
-      <h2>Search Employees</h2>
-      
-      <div>
-        <label>
-          <input 
-            type="radio" 
-            value="department" 
-            checked={searchBy === 'department'} 
-            onChange={() => setSearchBy('department')}
-          />
-          Department
-        </label>
-        <label>
-          <input 
-            type="radio" 
-            value="position" 
-            checked={searchBy === 'position'} 
-            onChange={() => setSearchBy('position')}
-          />
-          Position
-        </label>
-      </div>
-
-      <div>
-        {searchBy && (
-          <>
-            <label>{searchBy === 'department' ? 'Department' : 'Position'}: </label>
-            <input
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+    <div style={styles.container}>
+      <div style={styles.formContainer}>
+        <h2>Search Employees</h2>
+        <div style={styles.radioContainer}>
+          <label>
+            <input 
+              type="radio" 
+              value="department" 
+              checked={searchBy === 'department'} 
+              onChange={() => setSearchBy('department')}
+              style={styles.radioInput}
             />
-          </>
-        )}
+            Department
+          </label>
+          <label>
+            <input 
+              type="radio" 
+              value="position" 
+              checked={searchBy === 'position'} 
+              onChange={() => setSearchBy('position')}
+              style={styles.radioInput}
+            />
+            Position
+          </label>
+        </div>
+
+        <div>
+          {searchBy && (
+            <>
+              <label style={styles.label}>{searchBy === 'department' ? 'Department' : 'Position'}: </label>
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                style={styles.inputField}
+              />
+            </>
+          )}
+        </div>
+
+        <button onClick={handleSearch} style={styles.button}>Search</button>
+
+        {error && <div style={styles.error}>{error}</div>}
+
+        <div style={styles.resultsContainer}>
+          <h3>Search Results</h3>
+          {employees.length > 0 ? (
+            <ul style={styles.resultsList}>
+              {employees.map((employee) => (
+                <li key={employee._id} style={styles.resultItem}>
+                  {employee.first_name} {employee.last_name} - {employee.position} ({employee.department})
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div>No results found</div>
+          )}
+        </div>
+        <button onClick={() => navigate('/employeesList')} style={styles.button}>Go back</button>
       </div>
-
-      <button onClick={handleSearch}>Search</button>
-
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-
-      <div>
-        <h3>Search Results</h3>
-        {employees.length > 0 ? (
-          <ul>
-            {employees.map((employee) => (
-              <li key={employee._id}>
-                {employee.first_name} {employee.last_name} - {employee.position} ({employee.department})
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div>No results found</div>
-        )}
-      </div>
-      <button onClick={() => navigate('/employeesList')}>Go back</button>
     </div>
   );
+};
+
+// Styling for consistent design
+const styles = {
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    height: '100vh',
+    paddingTop: '50px',
+  },
+  formContainer: {
+    textAlign: 'center',
+    width: '80%',
+    padding: '30px',
+    border: '1px solid #ccc',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#fefdf1',
+  },
+  radioContainer: {
+    marginBottom: '20px',
+  },
+  radioInput: {
+    margin: '0 10px',
+  },
+  label: {
+    fontSize: '16px',
+  },
+  inputField: {
+    padding: '8px',
+    fontSize: '16px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+    marginBottom: '15px',
+    width: '80%',
+  },
+  button: {
+    padding: '10px 20px',
+    fontSize: '16px',
+    backgroundColor: '#17a589',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginTop: '10px',
+  },
+  error: {
+    color: 'red',
+    marginTop: '10px',
+  },
+  resultsContainer: {
+    marginTop: '20px',
+  },
+  resultsList: {
+    listStyleType: 'none',
+    paddingLeft: '0',
+  },
+  resultItem: {
+    marginBottom: '10px',
+  },
 };
 
 export default SearchEmployee;
