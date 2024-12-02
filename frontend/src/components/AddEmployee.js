@@ -1,91 +1,117 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const AddEmployee = ({ onAddEmployee }) => {
-  const [name, setName] = useState('');
-  const [position, setPosition] = useState('');
-  const [salary, setSalary] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+const AddEmployee = () => {
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    position: '',
+    salary: '',
+    date_of_joining: '',
+    department: '',
+  });
+  
+  const navigate = useNavigate();
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset error and success messages
-    setError('');
-    setSuccess('');
-
-    // Validate form inputs
-    if (!name || !position || !salary) {
-      setError('All fields are required');
-      return;
+    try {
+      const response = await axios.post('http://localhost:5000/api/v1/emp/employees', formData);
+      alert(response.data.message); // Show success message
+      
+    } catch (err) {
+      console.error('Error adding employee:', err);
+      alert('Error adding employee');
     }
-
-    if (isNaN(salary) || salary <= 0) {
-      setError('Salary must be a positive number');
-      return;
-    }
-
-    // Create employee object
-    const newEmployee = {
-      name,
-      position,
-      salary: parseFloat(salary), // Convert salary to a number
-    };
-
-    // Call the onAddEmployee function (could be passed down as a prop)
-    onAddEmployee(newEmployee);
-
-    // Reset the form fields
-    setName('');
-    setPosition('');
-    setSalary('');
-
-    // Show success message
-    setSuccess('Employee added successfully!');
   };
 
   return (
-    <div className="add-employee-container">
-      <h2>Add Employee</h2>
-      {error && <p className="error">{error}</p>}
-      {success && <p className="success">{success}</p>}
-      
+    <div>
+      <h2>Add New Employee</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">Name</label>
+          <label>First Name</label>
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="first_name"
+            value={formData.first_name}
+            onChange={handleChange}
             required
           />
         </div>
-        
         <div>
-          <label htmlFor="position">Position</label>
+          <label>Last Name</label>
           <input
             type="text"
-            id="position"
-            value={position}
-            onChange={(e) => setPosition(e.target.value)}
+            name="last_name"
+            value={formData.last_name}
+            onChange={handleChange}
             required
           />
         </div>
-        
         <div>
-          <label htmlFor="salary">Salary</label>
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Position</label>
+          <input
+            type="text"
+            name="position"
+            value={formData.position}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Salary</label>
           <input
             type="number"
-            id="salary"
-            value={salary}
-            onChange={(e) => setSalary(e.target.value)}
+            name="salary"
+            value={formData.salary}
+            onChange={handleChange}
             required
           />
         </div>
-        
+        <div>
+          <label>Date of Joining</label>
+          <input
+            type="date"
+            name="date_of_joining"
+            value={formData.date_of_joining}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Department</label>
+          <input
+            type="text"
+            name="department"
+            value={formData.department}
+            onChange={handleChange}
+            required
+          />
+        </div>
         <button type="submit">Add Employee</button>
+        <button onClick={() => navigate('/employeesList')}>Go back</button>
       </form>
     </div>
   );
